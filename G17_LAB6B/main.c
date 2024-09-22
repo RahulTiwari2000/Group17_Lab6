@@ -28,7 +28,10 @@ void init(void) {
 
     NVIC_EN0_R = 0x40000000 ;
 }
-
+void Systick_Init(void) {
+    NVIC_ST_RELOAD_R = count - 1;
+    NVIC_ST_CTRL_R = 0x07; //
+}
 int main(void) {
     
 }
