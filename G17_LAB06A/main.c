@@ -12,4 +12,14 @@ void Systick_Handler(void);   //Systick_handler function declaration
 int main(void) {
 
 }
+void init(void) {
 
+    SYSCTL_RCGCGPIO_R |= 0x020;
+    GPIO_PORTF_LOCK_R = 0x4C4F434B;
+    GPIO_PORTF_CR_R = 0x10;
+    GPIO_PORTF_DIR_R = 0x02;
+    GPIO_PORTF_DEN_R = 0x12; // Digital enable for PF1 and PF4
+    GPIO_PORTF_PUR_R |= 0x01;  // Enable pull-up resistor for the switch
+
+
+}
