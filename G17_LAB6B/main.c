@@ -35,3 +35,61 @@ void Systick_Init(void) {
 int main(void) {
     
 }
+void Systick_Handler(void)
+{
+    static uint32_t onTime = 0; // Count for the "ON" duration
+
+
+    if (onTime < (dutyCycle * count) / 100)
+    {
+        GPIO_PORTF_DATA_R |= 0x02; // red led on
+    }
+    else
+    {
+        GPIO_PORTF_DATA_R &= ~0x02; // red led off
+    }
+
+    onTime++;
+    if (onTime >= count)
+    {
+        onTime = 0;  // Reset onTime after it reaches upto count value
+    }
+
+    if (bp) {
+        pressTime++;
+    }
+}
+
+void GPIO_Handler(void) {
+    if (GPIO_PORTF_RIS_R & 0x10) {
+        bp = 1;
+
+        GPIO_PORTF_ICR_R |= 0x10; // Clear the interrupt
+    }
+
+    if ((GPIO_PORTF_DATA_R & 0x10) == 0x10)   // Button is released
+    {
+        if (bp)
+        {
+            if (pressTime < 100000)  // Short press
+            {
+
+                if (dutyCycle < 100)
+                {
+                    dutyCycle += 5; // Increase duty cycle by 5%
+                }
+            }
+            else
+            {  // Long press
+
+                if (dutyCycle > 0)
+                {
+                    dutyCycle -= 5; // Decrease duty cycle by 5%
+                }
+            }
+
+            pressTime = 0;
+            bp = 0;
+        }
+    }
+}
