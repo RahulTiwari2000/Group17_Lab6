@@ -33,7 +33,8 @@ void Systick_Init(void) {
     NVIC_ST_CTRL_R = 0x07; //
 }
 int main(void) {
-    
+    init();   // Initialize GPIO for switches and LED
+    Systick_Init(); // Initialize SysTick timer
 }
 void Systick_Handler(void)
 {
