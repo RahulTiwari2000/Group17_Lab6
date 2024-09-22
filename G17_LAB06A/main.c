@@ -10,7 +10,8 @@ void GPIO_Handler(void);      //GPIO Function declaration
 void Systick_Handler(void);   //Systick_handler function declaration
 
 int main(void) {
-
+ init();   // Initialize GPIO for switches and LED
+    Systick_Init(); // Initialize SysTick timer
 }
 void init(void) {
     SYSCTL_RCGCGPIO_R |= 0x020;
