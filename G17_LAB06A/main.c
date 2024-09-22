@@ -37,3 +37,41 @@ void Systick_Init(void) {
     NVIC_ST_RELOAD_R = count - 1;
     NVIC_ST_CTRL_R = 0x07;
 }
+void Systick_Handler(void) {
+    static uint32_t onTime = 0;
+
+    if (onTime < (dutyCycle * count) / 100)
+    {
+        GPIO_PORTF_DATA_R |= 0x02; //Red led on
+    }
+    else
+    {
+      GPIO_PORTF_DATA_R = 0x00; // Red led Off
+    }
+
+    onTime++;
+    if (onTime >= count)
+    {
+        onTime = 0;  // Reset onTime after it reaches to full count
+    }
+}
+
+void GPIO_Handler(void) {
+    if (GPIO_PORTF_RIS_R & 0X10)
+    {
+        if (dutyCycle < 100)
+        {
+            dutyCycle += 5;  // Increase by 5%
+        }
+        GPIO_PORTF_ICR_R |= 0X10;   // Clear the interrupt
+    }
+
+    if (GPIO_PORTF_RIS_R & 0X01)
+    {
+        if (dutyCycle > 0)
+        {
+            dutyCycle -= 5;  // Decrease by 5%
+        }
+        GPIO_PORTF_ICR_R |= 0X01;   // Clear the interrupt
+    }
+}
