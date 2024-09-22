@@ -21,5 +21,12 @@ void init(void) {
     GPIO_PORTF_DEN_R = 0x12; // Digital enable for PF1 and PF4
     GPIO_PORTF_PUR_R |= 0x01;  // Enable pull-up resistor for the switch
 
+    GPIO_PORTF_IS_R = 0x00;   // Edge-sensitive
+    GPIO_PORTF_IBE_R = 0x00;  // Interrupt controlled by IEV
+    GPIO_PORTF_IEV_R = 0x00;  // Falling edge trigger (button press)
+    GPIO_PORTF_ICR_R = 0x10;   // Clear any prior interrupt
+    GPIO_PORTF_IM_R = 0x10;    // Unmask interrupt for PF4
+
+    NVIC_EN0_R = 0x40000000 ;
 
 }
